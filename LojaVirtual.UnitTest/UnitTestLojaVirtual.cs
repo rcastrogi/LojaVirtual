@@ -9,6 +9,7 @@ namespace LojaVirtual.UnitTest
         [TestMethod]
         public void TestMethod1()
         {
+
         }
     }
 }
