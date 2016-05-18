@@ -17,7 +17,7 @@ namespace LojaVirtual.Web.Controllers
 
 
         // GET: Vitrine
-        public ViewResult ListaProdutos(int pagina = 1)
+        public ViewResult ListaProdutos(string categoria, int pagina = 1)
         {
 
             _repositorio = new ProdutoRepositorio();
@@ -25,6 +25,7 @@ namespace LojaVirtual.Web.Controllers
             ProdutosViewModel model = new ProdutosViewModel
             {
                 Produtos = _repositorio.Produto
+                .Where(p => categoria == null || p.Categoria == categoria)
                 .OrderBy(p => p.Descricao)
                 .Skip((pagina - 1) * ProdutosPorPagina)
                 .Take(ProdutosPorPagina),
@@ -34,7 +35,9 @@ namespace LojaVirtual.Web.Controllers
                     PaginaAtual = pagina,
                     ItensPorPagina = ProdutosPorPagina,
                     ItensTotal = _repositorio.Produto.Count()
-                }
+                },
+
+                CategoriaAtual = categoria
             };
 
             return View(model);
