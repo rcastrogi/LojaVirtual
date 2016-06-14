@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LojaVirtual.Web.Models;
 using LojaVirtual.Web.HtmlHelpers;
+using LojaVirtual.Dominio.Entidades;
 
 namespace LojaVirtual.UnitTest
 {
@@ -66,7 +67,60 @@ namespace LojaVirtual.UnitTest
                 + @"<a class=""btn btn-default"" href=""Pagina3"">3</a>", resultado.ToString()
                 );
         }
+
+        [TestMethod]
+        public void TestarInclusaoProduto()
+        {
+
+            //Arrange
+            Produto produto = new Produto
+            {
+                ProdutoId = 1,
+                Nome = "Bola",
+                Categoria = "Futebol",
+                Preco = (decimal)14.5,
+                Descricao = "Bola de couro para se jogar futebol."
+            };
+
+
+            //Act
+            Carrinho carrinho = new Carrinho();
+            carrinho.AdicionarItem(produto, 1);
+
+            ItemCarrinho[] item = carrinho.ListaCarrinho.ToArray();
+
+            //Assert
+            Assert.AreEqual(item.Length,1);
+            Assert.AreEqual(item[0].Produto, produto);
+        }
+
+        [TestMethod]
+        public void TestarAdicaoMesmoProduto()
+        {
+            //Arrange
+            Produto produto = new Produto
+            {
+                ProdutoId = 1,
+                Nome = "Bola",
+                Categoria = "Futebol",
+                Preco = (decimal)14.5,
+                Descricao = "Bola de couro para se jogar futebol."
+            };
+
+
+            //Act
+            Carrinho carrinho = new Carrinho();
+            carrinho.AdicionarItem(produto, 1);
+            carrinho.AdicionarItem(produto, 1);
+
+            //Assert
+            var resultado = carrinho.ListaCarrinho;
+            Assert.AreEqual(resultado.FirstOrDefault().Quantidade, 2);
+        }
+
+
+
     }
 
-    
+
 }
